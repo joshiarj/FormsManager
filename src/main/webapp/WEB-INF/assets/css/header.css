@@ -1,0 +1,8 @@
+a{text-decoration:none !important;}a:hover{color:goldenrod;}
+a.header-link{color:white}a.header-link:hover{color:palegoldenrod;}
+.btn-link{text-decoration:none !important;}
+.btn-link:hover{color:goldenrod;}
+.btn-link:focus,
+.btn-link:active:focus{outline:none;}
+.btn-link:focus{text-decoration:none;}
+.title{font-family:georgia;font-size:23px;font-weight:bold;color:bisque}
