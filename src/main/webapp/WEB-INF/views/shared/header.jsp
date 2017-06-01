@@ -9,8 +9,8 @@
         <link href="${SITE_URL}/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <link href="${SITE_URL}/static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
         <link href="${SITE_URL}/static/css/header.css" rel="stylesheet" type="text/css"/>
-        <script src="${SITE_URL}/static/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="${SITE_URL}/static/js/jquery.min.js" type="text/javascript"></script>
+        <script src="${SITE_URL}/static/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     </head>
     <body background="${SITE_URL}/img/bg-wallpaper2.jpg" style="background-attachment:fixed">
         <div class="container" style="background: #f9f9f9">

@@ -3,6 +3,7 @@ package com.arj.formsmanager.dao.impl;
 import com.arj.formsmanager.dao.UserDAO;
 import com.arj.formsmanager.entity.User;
 import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -66,6 +67,19 @@ public class UserDAOImpl implements UserDAO{
         users = session.createQuery("Select u from User u").list();
         session.close();
         return users;
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        session=sessionFactory.openSession();
+        Query query = session.createQuery("SELECT u FROM User u WHERE u.username=:username");
+        query.setParameter("username", username);
+        if (query.list().size() > 0) {
+            session.close();
+            return (User) query.uniqueResult();
+        }
+        session.close();
+        return null;
     }
     
 }

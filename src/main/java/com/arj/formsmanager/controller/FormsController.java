@@ -32,12 +32,12 @@ public class FormsController {
         return "forms/newform";
     }
 
-//    @RequestMapping(value = "/save", method = RequestMethod.POST)
-//    public String save(Form form, FormField ff, FormOption fOpt){
-//        formDAO.insert(form);
-//        ffDAO.insert(ff);
-//        fOptDAO.insert(fOpt);
-//        return "redirect:/form/new?success";
-//    }
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public String save(Form form, FormField ff, FormOption fOpt){
+        formDAO.insert(form);
+        ffDAO.insert(ff);
+        fOptDAO.insert(fOpt);
+        return "redirect:/form/new?success";
+    }
 
 }
