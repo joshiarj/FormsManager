@@ -4,14 +4,18 @@ import com.arj.formsmanager.dao.FormDAO;
 import com.arj.formsmanager.dao.FormFieldDAO;
 import com.arj.formsmanager.dao.FormOptionDAO;
 import com.arj.formsmanager.dao.UserDAO;
+import com.arj.formsmanager.dto.FormDTO;
 import com.arj.formsmanager.entity.Form;
 import com.arj.formsmanager.entity.FormField;
 import com.arj.formsmanager.entity.FormOption;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(value = "/form")
@@ -33,11 +37,32 @@ public class FormsController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(Form form, FormField ff, FormOption fOpt){
+    public String save(FormDTO formDTO, @RequestParam(value = "formFieldName[]") String[] formFieldName, @RequestParam(value = "formOptionType[]") String[] formOptionType, @RequestParam(value = "fieldOptions[]") String[] fieldOptions) {
+//    public String save(Form form, FormField ff, FormOption fOpt) {
+        Form form = new Form();
+        form.setFormTitle(formDTO.getTitle());
+        form.setFormDescription(formDTO.getDescription());
+        form.setUserId(formDTO.getUserId());
         formDAO.insert(form);
-        ffDAO.insert(ff);
-        fOptDAO.insert(fOpt);
+        FormOption fOpt = new FormOption();
+        for (int i = 0; i < formOptionType.length; i++) {
+            FormField ff = ffDAO.getById(Integer.parseInt(formFieldName[i]));
+            fOpt.setFormId(form);
+            fOpt.setFormFieldId(ff);
+            fOpt.setFormOptionDisplayOrder(i);
+            fOpt.setFormOptionType(formOptionType[i]);
+            String[] options = fieldOptions[i].split(",");
+            for (int j = 0; j < options.length; j++) {
+                fOpt.setFormOptionTypeOptions(options[j]);
+                fOptDAO.insert(fOpt);
+            }
+        }
         return "redirect:/form/new?success";
+    }
+
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    public String view(Model model) {
+        return "forms/viewform";
     }
 
 }

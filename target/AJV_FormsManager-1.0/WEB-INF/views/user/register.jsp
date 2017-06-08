@@ -18,6 +18,7 @@
         <label>Email:</label>
         <input type="email" name="email" required="required" class="form-control" />
     </div>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <button type="submit" class="btn btn-success">
         <span class="glyphicon glyphicon-user"></span> Sign Up
     </button>

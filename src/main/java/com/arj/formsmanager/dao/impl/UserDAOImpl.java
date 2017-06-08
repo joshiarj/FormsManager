@@ -75,10 +75,10 @@ public class UserDAOImpl implements UserDAO{
         Query query = session.createQuery("SELECT u FROM User u WHERE u.username=:username");
         query.setParameter("username", username);
         if (query.list().size() > 0) {
-            session.close();
+//            session.close();
             return (User) query.uniqueResult();
         }
-        session.close();
+//        session.close();
         return null;
     }
     

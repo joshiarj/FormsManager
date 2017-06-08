@@ -34,9 +34,8 @@ public class FormOption implements Serializable {
     private Integer formOptionId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "form_option_display_order")
-    private String formOptionDisplayOrder;
+    private int formOptionDisplayOrder;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 8)
@@ -61,7 +60,7 @@ public class FormOption implements Serializable {
         this.formOptionId = formOptionId;
     }
 
-    public FormOption(Integer formOptionId, String formOptionDisplayOrder, String formOptionType, String formOptionTypeOptions) {
+    public FormOption(Integer formOptionId, int formOptionDisplayOrder, String formOptionType, String formOptionTypeOptions) {
         this.formOptionId = formOptionId;
         this.formOptionDisplayOrder = formOptionDisplayOrder;
         this.formOptionType = formOptionType;
@@ -76,11 +75,11 @@ public class FormOption implements Serializable {
         this.formOptionId = formOptionId;
     }
 
-    public String getFormOptionDisplayOrder() {
+    public int getFormOptionDisplayOrder() {
         return formOptionDisplayOrder;
     }
 
-    public void setFormOptionDisplayOrder(String formOptionDisplayOrder) {
+    public void setFormOptionDisplayOrder(int formOptionDisplayOrder) {
         this.formOptionDisplayOrder = formOptionDisplayOrder;
     }
 

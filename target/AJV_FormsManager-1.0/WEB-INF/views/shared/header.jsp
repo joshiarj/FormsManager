@@ -27,8 +27,10 @@
                             </a>
                         <%--</c:if>--%>
                         <%--<c:if test="${not empty loggedIn}">--%>
-<!--                            Hello, ${loggedInUser.username}! | 
-                            <a href="${SITE_URL}/logout"><span class="glyphicon glyphicon-log-out"></span> Log Out</a>-->
+                            <!--Hello, ${loggedInUser.username}!--> | 
+                            <a class="header-link" href="${SITE_URL}/logout">
+                                <span class="glyphicon glyphicon-log-out"></span> Log Out
+                            </a>
                         <%--</c:if>--%>
                     </td>
                     <td align="center"><a href="${SITE_URL}">

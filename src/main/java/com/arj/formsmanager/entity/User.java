@@ -70,6 +70,8 @@ public class User implements Serializable {
     private List<FormField> formFieldList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<Form> formList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private List<UserRole> userRoleList;
 
     public User() {
     }
@@ -185,6 +187,15 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "com.arj.formsmanager.controller.User[ userId=" + userId + " ]";
+    }
+
+    @XmlTransient
+    public List<UserRole> getUserRoleList() {
+        return userRoleList;
+    }
+
+    public void setUserRoleList(List<UserRole> userRoleList) {
+        this.userRoleList = userRoleList;
     }
     
 }

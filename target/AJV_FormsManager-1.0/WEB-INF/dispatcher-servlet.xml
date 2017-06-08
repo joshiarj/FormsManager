@@ -38,5 +38,18 @@
     
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
           p:prefix="/WEB-INF/views/" p:suffix=".jsp"/>
+    
+<!--    <security:http auto-config="true">
+        <security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+        <security:form-login login-page="/login" username-parameter="username" password-parameter="password" />
+    </security:http>
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:jdbc-user-service data-source-ref="dataSource"/>
+            <security:user-service>
+                <security:user name="admin" password="admin123" authorities="ROLE_ADMIN" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>-->
 
 </beans>
