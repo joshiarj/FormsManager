@@ -9,34 +9,40 @@
 <c:if test="${param.success!=null}">
     <div style="color:green">Form successfully saved!</div>
 </c:if>
-<form method="post" action="${SITE_URL}/form/save">
+    <form method="post" action="${SITE_URL}/form/save">
     <div id="form-fixedtop">
         <div class="form-group">
             <label>Form Title:</label>
-            <input type="text" name="title" class="form-control"/>
+            <input type="text" name="title" class="form-control" required="required"/>
         </div>
         <div class="form-group">
             <label>Form Description</label>
-            <textarea name="description" class="form-control"></textarea>
+            <textarea name="description" class="form-control" required="required"></textarea>
         </div>
-        <input type="hidden" name="userId" value=""/>
+        <input type="hidden" name="userId" value="1"/>
     </div>
     <div style="font-weight:bold">Choose Form Fields:</div>
     <table id="tbl-formfields" class="table vertical-align table-condensed" >
         <thead>
             <tr>
-                <th width="4%">#</th>
-                <th width="38%">Field</th>
-                <th width="38%">Input Type</th>
+                <th width="10%">Display Order</th>
+                <th width="33%">Field</th>
+                <th width="33%">Input Type</th>
                 <th width="12%">Make Required</th>
-                <th width="8%">Action</th>
+                <th width="12%">Action</th>
             </tr>
         </thead>
         <tbody id="tbody">
             <tr id="tr-formField">
-                <td>1</td>
                 <td>
-                    <select name="formFieldName[]" id="formFieldName">
+                    <select name="formOptionDisplayOrder" id="formOptionDisplayOrder">
+                        <c:forEach begin="0" end="9" step="1" varStatus="loop">
+                            <option value="${loop.count}"><c:out value="${loop.count}"/></option>
+                        </c:forEach>
+                    </select>
+                </td>
+                <td>
+                    <select name="formFieldName" id="formFieldName">
                         <option value="">-------------------------------------</option>
                         <c:forEach var="ff" items="${formFields}">
                             <option value="${ff.formFieldId}">${ff.formFieldName}</option>
@@ -46,23 +52,25 @@
                 <td>
                     <div>
                         <span>
-                            <select name="formOptionType[]" id="formOptionType">
+                            <select name="formOptionType" id="formOptionType">
                                 <option value="">-------------------------------------</option>
                                 <option value="text">Text</option>
+                                <option value="password">Password</option>
                                 <option value="textarea">Textarea</option>
                                 <option value="checkbox">Checkbox</option>
                                 <option value="select">Select Options (Dropdown)</option>
                                 <option value="radio">Radio Buttons</option>
+                                <option value="file">File</option>
                             </select>
                         </span>
                     </div>
                     <div id="block-optionsInput" style="display:none">
                         <label>Options:</label><br>
-                        <input id="options" type="text" name="fieldOptions[]" data-role="tagsinput"/><!-- value="Male,Female"/>-->
+                        <input id="options" type="text" name="fieldOptions" data-role="tagsinput" value=""/><!-- value="Male,Female"/>-->
                     </div>
                 </td>
                 <td>
-                    <label><input type="checkbox" name="fieldRequired[]"/> Required</label>
+                    <label><input type="checkbox" name="fieldRequired"/> Required</label>
                 </td>
                 <td></td>
             </tr>
@@ -72,22 +80,23 @@
         <button type="button" id="btn-addfield" class="btn btn-primary">
             <span class="glyphicon glyphicon-plus"></span> Add Field
         </button>
-        <button type="button" id="btn-addusers" class="btn btn-info">
-            <span class="glyphicon glyphicon-user"></span> Add Users
-        </button>
+        <!--        <button type="button" id="btn-addusers" class="btn btn-info">
+                    <span class="glyphicon glyphicon-user"></span> Add Users
+                </button>-->
     </div>
-    <div id="block-addusers" class="form-group" style="display:none">
-        <div id="block-showusers" style="height:25px;vertical-align:bottom"></div>
-        <div>
-            <input type="text" name="adduser" id="adduser" placeholder="Add Users..."/>
-            <a href="${SITE_URL}/user/search" id="btn-adduser" class="btn btn-default">
-                Add
-            </a>
-            <button type="button" id="btn-canceladduser" class="btn btn-link">Cancel</button>
-        </div>
-    </div><br>
+    <!--    <div id="block-addusers" class="form-group" style="display:none">
+            <div id="block-showusers" style="height:25px;vertical-align:bottom"></div>
+            <div>
+                <input type="text" name="adduser" id="adduser" placeholder="Add Users..."/>
+                <a href="${SITE_URL}/user/search" id="btn-adduser" class="btn btn-default">
+                    Add
+                </a>
+                <button type="button" id="btn-canceladduser" class="btn btn-link">Cancel</button>
+            </div>
+        </div>-->
+    <br>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    <button type="button" id="btn-saveform" class="btn btn-success">
+    <button type="submit" id="btn-saveform" class="btn btn-success">
         <span class="glyphicon glyphicon-floppy-disk"></span> Save This Form
     </button>
 </form>
@@ -109,15 +118,17 @@
 //                } 
                 $.ajax({
                     type: "POST",
-                    contentType: "application/json",
+                    contentType: "application/x-www-form-urlencoded",
+//                    contentType: "application/json",
                     url: '${SITE_URL}/user/search',
                     data: {adduser: $(userToAdd).val()},
 //                    dataType: "json",
                     success: function (data) {
-                        alert($.parseJSON(data.result[0]));
+                        console.log(data.userId);
+                        alert($.parseJSON(data));
                         if (data !== "") {
 //                            var resultData = JSON.stringify(data);
-                            $("#block-showusers").append('<div style="display:inline;margin-left:5px">' + data.result[0].username + '</div>');
+                            $("#block-showusers").html('<div style="display:inline;margin-left:5px">' + data.username + '</div>');
 //                            $.each(data, function (result) {
 //                                $("#block-showusers").append('<div style="display:inline;margin-left:5px">' + result.username + '</div>');
 //                            });
@@ -154,42 +165,47 @@
         });
 
         //****Repeat form field block****
-        var count = 2;
         var repeatBlock = "#tbody";
-        var repeatText = '</td>\n\
-            <td><select name="formFieldName[]">\n\
+        var repeatText = '<td>\n\
+                <select name="formOptionDisplayOrder" id="formOptionDisplayOrder">\n\
+                    <c:forEach begin="0" end="9" step="1" varStatus="loop">\n\
+                        <option value="${loop.count}"><c:out value="${loop.count}"/></option>\n\
+                    </c:forEach>\n\
+                </select>\n\
+            </td>\n\
+            <td><select name="formFieldName">\n\
                 <option value="">-------------------------------------</option>\n\
-    <c:forEach var="ff" items="${formFields}">\n\
+                <c:forEach var="ff" items="${formFields}">\n\
                     <option value="${ff.formFieldId}">${ff.formFieldName}</option>\n\
-    </c:forEach>\n\
+                </c:forEach>\n\
             </select></td>\n\
             <td>\n\
-                <select class="optType" name="formOptionType[]">\n\
+                <select class="optType" name="formOptionType">\n\
                     <option value="">-------------------------------------</option>\n\
                     <option value="text">Text</option>\n\
+                    <option value="password">Password</option>\n\
                     <option value="textarea">Textarea</option>\n\
                     <option value="checkbox">Checkbox</option>\n\
                     <option value="select">Select Options (Dropdown)</option>\n\
                     <option value="radio">Radio Buttons</option>\n\
+                    <option value="file">File</option>\n\
                 </select>\n\
                 <div class="optBlock" style="display:none">\n\
                     <label>Options:</label><br>\n\
-                    <input class="optInput" type="text" name="fieldOptions[]" data-role="tagsinput"/>\n\
+                    <input class="optInput" type="text" name="fieldOptions" data-role="tagsinput" value=""/>\n\
                 </div>\n\
             </td>\n\
-            <td><label><input type="checkbox" name="fieldRequired[]"/> Required</label></td>\n\
+            <td><label><input type="checkbox" name="fieldRequired"/> Required</label></td>\n\
             <td><a href="javascript:void(0)" class="removeField" style="color:red" title="Remove this field">\n\
                 <span class="glyphicon glyphicon-remove"></span></a>\n\
             </td></tr>';
         $("#btn-addfield").click(function (e) {
             e.preventDefault();
-            $(repeatBlock).append('<tr class="trRepeat"><td>' + count + repeatText);
-            count++;
+            $(repeatBlock).append('<tr class="trRepeat">' + repeatText);
         });
         $(repeatBlock).on('click', '.removeField', function (e) {
             e.preventDefault();
             $(this).parent().parent().remove();
-            count--;
         });
 
         //****Show input field when dropdown/radio is selected****
@@ -201,6 +217,7 @@
                 $(this).closest('tr').find(".optBlock").find(".optInput").tagsinput('refresh');
             } else {
                 $(this).closest('tr').find(".optBlock").hide();
+//                $(this).closest('tr').find(".optBlock").find(".optInput").reset();
             }
         });
 

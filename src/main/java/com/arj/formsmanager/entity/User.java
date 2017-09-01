@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.arj.formsmanager.entity;
 
 import java.io.Serializable;
@@ -22,6 +26,10 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author Zeppelin
+ */
 @Entity
 @Table(name = "tbl_users")
 @XmlRootElement
@@ -57,7 +65,8 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
     @Basic(optional = false)
-    @Column(name = "added_date", insertable = false)
+    @NotNull
+    @Column(name = "added_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date addedDate;
     @Basic(optional = false)
@@ -67,11 +76,11 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<FormUser> formUserList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private List<UserRole> userRoleList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<FormField> formFieldList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<Form> formList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private List<UserRole> userRoleList;
 
     public User() {
     }
@@ -147,6 +156,15 @@ public class User implements Serializable {
     }
 
     @XmlTransient
+    public List<UserRole> getUserRoleList() {
+        return userRoleList;
+    }
+
+    public void setUserRoleList(List<UserRole> userRoleList) {
+        this.userRoleList = userRoleList;
+    }
+
+    @XmlTransient
     public List<FormField> getFormFieldList() {
         return formFieldList;
     }
@@ -186,16 +204,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "com.arj.formsmanager.controller.User[ userId=" + userId + " ]";
-    }
-
-    @XmlTransient
-    public List<UserRole> getUserRoleList() {
-        return userRoleList;
-    }
-
-    public void setUserRoleList(List<UserRole> userRoleList) {
-        this.userRoleList = userRoleList;
+        return "com.arj.formsmanager.entity.User[ userId=" + userId + " ]";
     }
     
 }
