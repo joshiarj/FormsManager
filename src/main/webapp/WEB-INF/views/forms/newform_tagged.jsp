@@ -1,5 +1,5 @@
 <%@include file="../shared/header.jsp" %>
-<c:set var="i"  value="0" />
+<%--<c:set var="fieldCount"  value="1" />--%>
 <link href="${SITE_URL}/static/bootstrap/tagsinput/bootstrap-tagsinput.css" rel="stylesheet" type="text/css"/>
 <script src="${SITE_URL}/static/bootstrap/tagsinput/bootstrap-tagsinput.js" type="text/javascript"></script>
 <style type="text/css">
@@ -9,19 +9,17 @@
 <c:if test="${param.success!=null}">
     <div style="color:green">Form successfully saved!</div>
 </c:if>
-<form method="post" action="${SITE_URL}/form/save" enctype="multipart/form-data">
-    <!--modelAttribute="formOptDTO">-->
-    <!--enctype="form-data">-->
+<form:form modelAttribute="formOptDTO" method="post" action="${SITE_URL}/form/save">
     <div id="form-fixedtop">
         <div class="form-group">
             <label>Form Title:</label>
-            <input type="text" name="title" class="form-control" required="required"/>
+            <form:input path="title" type="text" name="title" class="form-control" required="required"/>
         </div>
         <div class="form-group">
             <label>Form Description:</label>
-            <textarea name="description" class="form-control" required="required"></textarea>
+            <form:textarea path="description" name="description" class="form-control" required="required"/>
         </div>
-        <input type="hidden" name="userId" value="1"/>
+            <form:input path="userId" type="hidden" name="userId" value="1"/>
     </div>
     <div style="font-weight:bold">Choose Form Fields:</div>
     <table id="tbl-formfields" class="table vertical-align table-condensed" >
@@ -37,46 +35,39 @@
         <tbody id="tbody">
             <tr id="tr-formField">
                 <td>
-                    <select name="formOptionDisplayOrder[${i}]" id="formOptionDisplayOrder">
+                    <form:select path="formOptionDisplayOrder" name="formOptionDisplayOrder" id="formOptionDisplayOrder">
                         <c:forEach begin="0" end="9" step="1" varStatus="loop">
-                            <option value="${loop.count}"><c:out value="${loop.count}"/></option>
+                            <form:option value="${loop.count}"><c:out value="${loop.count}"/></form:option>
                         </c:forEach>
-                    </select>
+                    </form:select>
                 </td>
                 <td>
-                    <select name="formFieldName[${i}]" id="formFieldName">
+                    <form:select path="formFieldName" name="formFieldName" id="formFieldName">
                         <option value="">-------------------------------------</option>
                         <c:forEach var="ff" items="${formFields}">
-                            <option value="${ff.formFieldId}">${ff.formFieldName}</option>
+                            <form:option value="${ff.formFieldId}">${ff.formFieldName}</form:option>
                         </c:forEach>
-                    </select>
+                    </form:select>
                 </td>
                 <td>
                     <div>
                         <span>
-                            <select name="formOptionType[${i}]" id="formOptionType">
-                                <option value="">-------------------------------------</option>
+                            <form:select path="formOptionType" name="formOptionType" id="formOptionType">
+                                <form:option value="">-------------------------------------</form:option>
                                 <c:forEach var="ot" items="${optTypes}">
                                     <c:set var="optValue" value="${fn:split(ot,' ')}"/>
-                                    <option value="${fn:toLowerCase(optValue[0])}">${ot}</option>
+                                    <form:option value="${fn:toLowerCase(optValue[0])}">${ot}</form:option>
                                 </c:forEach>
-                                <!--                                <option value="text">Text</option>
-                                                                <option value="password">Password</option>
-                                                                <option value="textarea">Textarea</option>
-                                                                <option value="checkbox">Checkbox</option>
-                                                                <option value="select">Select Options (Dropdown)</option>
-                                                                <option value="radio">Radio Buttons</option>
-                                                                <option value="file">File</option>-->
-                            </select>
+                            </form:select>
                         </span>
                     </div>
                     <div id="block-optionsInput" style="display:none">
                         <label>Options:</label><br>
-                        <input id="options" type="text" name="fieldOptions[${i}]" data-role="tagsinput" value=""/><!-- value="Male,Female"/>-->
+                        <form:input path="fieldOptions" id="options" type="text" name="fieldOptions" data-role="tagsinput" value=""/><!-- value="Male,Female"/>-->
                     </div>
                 </td>
                 <td>
-                    <label><input type="checkbox" name="fieldRequired[${i}]"/> Required</label>
+                    <label><form:checkbox  path="fieldRequired" name="fieldRequired" value="true"/> Required</label>
                 </td>
                 <td></td>
             </tr>
@@ -101,11 +92,11 @@
             </div>
         </div>-->
     <br>
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+    <form:input path="${_csrf.parameterName}" type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <button type="submit" id="btn-saveform" class="btn btn-success">
         <span class="glyphicon glyphicon-floppy-disk"></span> Save This Form
     </button>
-</form>
+</form:form>
 
 <%--<c:set var="fieldCount"  value="${fieldCount+1}" />--%>
 <script>
@@ -171,23 +162,24 @@
         });
 
         //****Repeat form field block****
-        //var i = 1;
+        var i = 1;
         var repeatBlock = "#tbody";
         var repeatText = '<td>\n\
-                <select name="formOptionDisplayOrder[${i+1}]" id="formOptionDisplayOrder">\n\
-                <c:forEach begin="0" end="9" step="1" varStatus="loop">\n\
+                <select name="formOptionDisplayOrder" id="formOptionDisplayOrder">\n\
+                    <c:forEach begin="0" end="9" step="1" varStatus="loop">\n\
                         <option value="${loop.count}"><c:out value="${loop.count}"/></option>\n\
-                </c:forEach>\n\
+                    </c:forEach>\n\
                 </select>\n\
             </td>\n\
-            <td><select name="formFieldName[${i+1}]">\n\
-                <option value="">-------------------------------------</option>\n\
-            <c:forEach var="ff" items="${formFields}">\n\
-                    <option value="${ff.formFieldId}">${ff.formFieldName}</option>\n\
-            </c:forEach>\n\
-            </select></td>\n\
             <td>\n\
-                <select class="optType" name="formOptionType[${i+1}]">\n\
+                <select name="formFieldName">\n\
+                    <option value="">-------------------------------------</option>\n\
+                    <c:forEach var="ff" items="${formFields}">\n\
+                        <option value="${ff.formFieldId}">${ff.formFieldName}</option>\n\
+                    </c:forEach>\n\
+                </select></td>\n\
+            <td>\n\
+                <select class="optType" name="formOptionType">\n\
                     <option value="">-------------------------------------</option>\n\
                     <c:forEach var="ot" items="${optTypes}">\n\
                         <c:set var="optValue" value="${fn:split(ot,' ')}"/>\n\
@@ -196,17 +188,16 @@
                 </select>\n\
                 <div class="optBlock" style="display:none">\n\
                     <label>Options:</label><br>\n\
-                    <input class="optInput" type="text" name="fieldOptions[${i+1}]" data-role="tagsinput" value=""/>\n\
+                    <input class="optInput" type="text" name="fieldOptions" data-role="tagsinput" value=""/>\n\
                 </div>\n\
             </td>\n\
-            <td><label><input type="checkbox" name="fieldRequired[${i+1}]"/> Required</label></td>\n\
+            <td><label><input type="checkbox" name="fieldRequired"/> Required</label></td>\n\
             <td><a href="javascript:void(0)" class="removeField" style="color:red" title="Remove this field">\n\
                 <span class="glyphicon glyphicon-remove"></span></a>\n\
             </td></tr>';
         $("#btn-addfield").click(function (e) {
             e.preventDefault();
             $(repeatBlock).append('<tr class="trRepeat">' + repeatText);
-            <c:set var="i" value="${i+1}" />
         });
         $(repeatBlock).on('click', '.removeField', function (e) {
             e.preventDefault();

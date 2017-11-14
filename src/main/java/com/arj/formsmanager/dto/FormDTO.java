@@ -3,13 +3,13 @@ package com.arj.formsmanager.dto;
 import com.arj.formsmanager.entity.User;
 
 public class FormDTO {
-    private String title, description;
-    private User userId;
+    private String title, description, userId;
+//    private User userId;
 
     public FormDTO() {
     }
 
-    public FormDTO(String title, String description, User userId) {
+    public FormDTO(String title, String description, String userId) {
         this.title = title;
         this.description = description;
         this.userId = userId;
@@ -31,11 +31,11 @@ public class FormDTO {
         this.description = description;
     }
 
-    public User getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(User userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
     
