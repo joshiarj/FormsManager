@@ -3,12 +3,12 @@ package com.arj.formsmanager.dto;
 public class FormOptionDTO {
     private String title, description, userId;
     private String[] formOptionDisplayOrder, formFieldName, formOptionType, fieldOptions;
-    private String[] fieldRequired;
+    private boolean[] fieldRequired;
 
     public FormOptionDTO() {
     }
 
-    public FormOptionDTO(String title, String userId, String description, String[] formOptionDisplayOrder, String[] formFieldName, String[] formOptionType, String[] fieldOptions, String[] fieldRequired) {
+    public FormOptionDTO(String title, String userId, String description, String[] formOptionDisplayOrder, String[] formFieldName, String[] formOptionType, String[] fieldOptions, boolean[] fieldRequired) {
         this.title = title;
         this.description = description;
         this.userId = userId;
@@ -75,11 +75,11 @@ public class FormOptionDTO {
         this.fieldOptions = fieldOptions;
     }
 
-    public String[] getFieldRequired() {
+    public boolean[] isFieldRequired() {
         return fieldRequired;
     }
 
-    public void setFieldRequired(String[] fieldRequired) {
+    public void setFieldRequired(boolean[] fieldRequired) {
         this.fieldRequired = fieldRequired;
     }
     

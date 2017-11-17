@@ -38,14 +38,14 @@
         <tbody id="tbody">
             <tr id="tr-formField">
                 <td>
-                    <select name="formOptionDisplayOrder[${i}]" id="formOptionDisplayOrder">
+                    <select name="formOptionDisplayOrder[0]" id="formOptionDisplayOrder" class="ddown">
                         <c:forEach begin="0" end="9" step="1" varStatus="loop">
                             <option value="${loop.count}"><c:out value="${loop.count}"/></option>
                         </c:forEach>
                     </select>
                 </td>
                 <td>
-                    <select name="formFieldName[${i}]" id="formFieldName">
+                    <select name="formFieldName[0]" id="formFieldName" class="ddown">
                         <option value="">-------------------------------------</option>
                         <c:forEach var="ff" items="${formFields}">
                             <option value="${ff.formFieldId}">${ff.formFieldName}</option>
@@ -53,37 +53,26 @@
                     </select>
                 </td>
                 <td>
-                    <div>
-                        <span>
-                            <select name="formOptionType[${i}]" id="formOptionType">
-                                <option value="">-------------------------------------</option>
-                                <c:forEach var="ot" items="${optTypes}">
-                                    <c:set var="optValue" value="${fn:split(ot,' ')}"/>
-                                    <option value="${fn:toLowerCase(optValue[0])}">${ot}</option>
-                                </c:forEach>
-                                <!--                                <option value="text">Text</option>
-                                                                <option value="password">Password</option>
-                                                                <option value="textarea">Textarea</option>
-                                                                <option value="checkbox">Checkbox</option>
-                                                                <option value="select">Select Options (Dropdown)</option>
-                                                                <option value="radio">Radio Buttons</option>
-                                                                <option value="file">File</option>-->
-                            </select>
-                        </span>
-                    </div>
+                    <select name="formOptionType[0]" id="formOptionType" class="optType ddown">
+                        <option value="">-------------------------------------</option>
+                        <c:forEach var="ot" items="${optTypes}">
+                            <c:set var="optValue" value="${fn:split(ot,' ')}"/>
+                            <option value="${fn:toLowerCase(optValue[0])}">${ot}</option>
+                        </c:forEach>
+                    </select>
                     <div id="block-optionsInput" style="display:none">
-                        <label>Options:</label><br>
-                        <input id="options" type="text" name="fieldOptions[${i}]" data-role="tagsinput" value=""/><!-- value="Male,Female"/>-->
+                        <label>Options (comma-separated):</label><br>
+                        <input id="fieldOptions" type="text" name="fieldOptions[0]" value=""/>
                     </div>
                 </td>
                 <td>
-                    <label><input type="checkbox" name="fieldRequired[${i}]"/> Required</label>
+                    <label><input type="checkbox" id="fieldRequired" name="fieldRequired[0]" value="true"/> Required</label>
                 </td>
-                <td></td>
             </tr>
         </tbody>
     </table>
     <div>
+        <input type="hidden" id="field-count" value="0"/>
         <button type="button" id="btn-addfield" class="btn btn-primary">
             <span class="glyphicon glyphicon-plus"></span> Add Field
         </button>
@@ -109,7 +98,7 @@
 </form>
 
 <c:set var="i"  value="${i+1}" />
-<script type="text/javascript">
+<script>
     $(document).on('ready', function () {
 
         //****Add users who can modify/view form****
@@ -161,57 +150,36 @@
         });
 
         //****Input options for dropdown/radio****
-        var optType = "#formOptionType";
-        var optBlock = "#block-optionsInput";
-        $(optType).change(function () {
-            if ($(optType).val() === "radio" || $(optType).val() === "select") {
-                $(optBlock).show();
-            } else {
-                $(optBlock).hide();
-            }
-        });
+//        var optType = "#formOptionType";
+//        var optBlock = "#block-optionsInput";
+//        $(optType).change(function () {
+//            if ($(optType).val() === "radio" || $(optType).val() === "select") {
+//                $(optBlock).show();
+//            } else {
+//                $(optBlock).hide();
+//            }
+//        });
 
         //****Repeat form field block****
-//        var count = 1;
         var repeatBlock = "#tbody";
-        var repeatText = '<td>\n\
-                <select name="formOptionDisplayOrder['+count+']" id="formOptionDisplayOrder">\n\
-                <c:forEach begin="0" end="9" step="1" varStatus="loop">\n\
-                        <option value="${loop.count}"><c:out value="${loop.count}"/></option>\n\
-                </c:forEach>\n\
-                </select>\n\
-            </td>\n\
-            <td><select name="formFieldName['+count+']">\n\
-                <option value="">-------------------------------------</option>\n\
-            <c:forEach var="ff" items="${formFields}">\n\
-                    <option value="${ff.formFieldId}">${ff.formFieldName}</option>\n\
-            </c:forEach>\n\
-            </select></td>\n\
-            <td>\n\
-                <select class="optType" name="formOptionType['+count+']">\n\
-                    <option value="">-------------------------------------</option>\n\
-                    <c:forEach var="ot" items="${optTypes}">\n\
-                        <c:set var="optValue" value="${fn:split(ot,' ')}"/>\n\
-                        <option value="${fn:toLowerCase(optValue[0])}">${ot}</option>\n\
-                    </c:forEach>\n\
-                </select>\n\
-                <div class="optBlock" style="display:none">\n\
-                    <label>Options:</label><br>\n\
-                    <input class="optInput" type="text" name="fieldOptions['+count+']" data-role="tagsinput" value=""/>\n\
-                </div>\n\
-            </td>\n\
-            <td><label><input type="checkbox" name="fieldRequired['+count+']"/> Required</label></td>\n\
-            <td><a href="javascript:void(0)" class="removeField" style="color:red" title="Remove this field">\n\
-                <span class="glyphicon glyphicon-remove"></span></a>\n\
-            </td></tr>';
+        var repeatField = "#tr-formField";
+        var delButton = '<td><a href="javascript:void(0)" class="removeField" style="color:red" title="Remove this field">\n\
+                        <span class="glyphicon glyphicon-remove"></span></a></td>';
+        var counter = 0;
         $("#btn-addfield").click(function (e) {
             e.preventDefault();
-            var repeat = $(repeatBlock).append('<tr class="trRepeat">' + repeatText);
-            repeat;
-            count++;
-//            $(repeatBlock).append('<tr class="trRepeat">' + repeatText);
-//            count++;
+            counter++;
+            var repeatedField = $(repeatField).clone().append(delButton).appendTo($(repeatBlock));
+            repeatedField.find("#block-optionsInput").hide();
+            repeatedField.find('#formOptionDisplayOrder').attr('name', 'formOptionDisplayOrder['+counter+']');
+            repeatedField.find('#formFieldName').attr('name', 'formFieldName['+counter+']');
+            repeatedField.find('#formOptionType').attr('name', 'formOptionType['+counter+']');
+            repeatedField.find('#fieldOptions').attr('name', 'fieldOptions['+counter+']');
+            repeatedField.find('#fieldRequired').attr('name', 'fieldRequired['+counter+']');
+//            repeatedField.find('.ddown').attr('name', '['+counter+']')
         });
+        
+        //****Remove field/row****
         $(repeatBlock).on('click', '.removeField', function (e) {
             e.preventDefault();
             $(this).parent().parent().remove();
@@ -222,11 +190,12 @@
             e.preventDefault();
             var val = $(this).val();
             if (val === "radio" || val === "select") {
-                $(this).closest('tr').find(".optBlock").show();
-                $(this).closest('tr').find(".optBlock").find(".optInput").tagsinput('refresh');
+                $(this).closest('tr').find("#block-optionsInput").show();
+                $(this).closest('tr').find("#block-optionsInput").find("#fieldOptions").val('');
+//                $(this).closest('tr').find("#block-optionsInput").find("#options").tagsinput('refresh');
             } else {
-                $(this).closest('tr').find(".optBlock").hide();
-//                $(this).closest('tr').find(".optBlock").find(".optInput").reset();
+                $(this).closest('tr').find("#block-optionsInput").hide();
+//                $(this).closest('tr').find("#block-optionsInput").find("#options").tagsinput('removeAll');
             }
         });
 

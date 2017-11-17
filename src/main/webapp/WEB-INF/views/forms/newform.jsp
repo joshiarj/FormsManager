@@ -2,6 +2,7 @@
 <c:set var="i"  value="0" />
 <link href="${SITE_URL}/static/bootstrap/tagsinput/bootstrap-tagsinput.css" rel="stylesheet" type="text/css"/>
 <script src="${SITE_URL}/static/bootstrap/tagsinput/bootstrap-tagsinput.js" type="text/javascript"></script>
+<script>var count=1;</script>
 <style type="text/css">
     table.vertical-align > tbody > tr > td {vertical-align:middle;}
 </style>
@@ -9,7 +10,7 @@
 <c:if test="${param.success!=null}">
     <div style="color:green">Form successfully saved!</div>
 </c:if>
-<form method="post" action="${SITE_URL}/form/save" enctype="multipart/form-data">
+<form method="post" action="${SITE_URL}/form/save">
     <!--modelAttribute="formOptDTO">-->
     <!--enctype="form-data">-->
     <div id="form-fixedtop">
@@ -107,8 +108,8 @@
     </button>
 </form>
 
-<%--<c:set var="fieldCount"  value="${fieldCount+1}" />--%>
-<script>
+<c:set var="i"  value="${i+1}" />
+<script type="text/javascript">
     $(document).on('ready', function () {
 
         //****Add users who can modify/view form****
@@ -171,23 +172,23 @@
         });
 
         //****Repeat form field block****
-        //var i = 1;
+//        var count = 1;
         var repeatBlock = "#tbody";
         var repeatText = '<td>\n\
-                <select name="formOptionDisplayOrder[${i+1}]" id="formOptionDisplayOrder">\n\
+                <select name="formOptionDisplayOrder['+count+']" id="formOptionDisplayOrder">\n\
                 <c:forEach begin="0" end="9" step="1" varStatus="loop">\n\
                         <option value="${loop.count}"><c:out value="${loop.count}"/></option>\n\
                 </c:forEach>\n\
                 </select>\n\
             </td>\n\
-            <td><select name="formFieldName[${i+1}]">\n\
+            <td><select name="formFieldName['+count+']">\n\
                 <option value="">-------------------------------------</option>\n\
             <c:forEach var="ff" items="${formFields}">\n\
                     <option value="${ff.formFieldId}">${ff.formFieldName}</option>\n\
             </c:forEach>\n\
             </select></td>\n\
             <td>\n\
-                <select class="optType" name="formOptionType[${i+1}]">\n\
+                <select class="optType" name="formOptionType['+count+']">\n\
                     <option value="">-------------------------------------</option>\n\
                     <c:forEach var="ot" items="${optTypes}">\n\
                         <c:set var="optValue" value="${fn:split(ot,' ')}"/>\n\
@@ -196,17 +197,20 @@
                 </select>\n\
                 <div class="optBlock" style="display:none">\n\
                     <label>Options:</label><br>\n\
-                    <input class="optInput" type="text" name="fieldOptions[${i+1}]" data-role="tagsinput" value=""/>\n\
+                    <input class="optInput" type="text" name="fieldOptions['+count+']" data-role="tagsinput" value=""/>\n\
                 </div>\n\
             </td>\n\
-            <td><label><input type="checkbox" name="fieldRequired[${i+1}]"/> Required</label></td>\n\
+            <td><label><input type="checkbox" name="fieldRequired['+count+']"/> Required</label></td>\n\
             <td><a href="javascript:void(0)" class="removeField" style="color:red" title="Remove this field">\n\
                 <span class="glyphicon glyphicon-remove"></span></a>\n\
             </td></tr>';
         $("#btn-addfield").click(function (e) {
             e.preventDefault();
-            $(repeatBlock).append('<tr class="trRepeat">' + repeatText);
-            <c:set var="i" value="${i+1}" />
+            var repeat = $(repeatBlock).append('<tr class="trRepeat">' + repeatText);
+            repeat;
+            count++;
+//            $(repeatBlock).append('<tr class="trRepeat">' + repeatText);
+//            count++;
         });
         $(repeatBlock).on('click', '.removeField', function (e) {
             e.preventDefault();
